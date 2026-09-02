@@ -23,10 +23,10 @@
         .step-box h3 { font-size: 16px; margin-bottom: 8px; color: var(--primary); }
         .step-box p { font-size: 13.5px; color: var(--text); margin-bottom: 15px; line-height: 1.6; }
         .copy-input { width: 100%; background: #000; color: #4ade80; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 14px; margin-bottom: 12px; outline: none; text-align: center; font-weight: bold; }
-        .code-area { width: 100%; height: 100px; background: #000; color: #4ade80; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 11px; resize: none; margin-bottom: 12px; outline: none; white-space: pre-wrap; word-wrap: break-word;}
         .btn { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn.success { background: #10b981; }
+        .code-preview { background: #000; color: #a1a1aa; border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-size: 11px; margin-bottom: 12px; font-family: monospace; }
     </style>
 </head>
 <body>
@@ -49,25 +49,58 @@
         <div class="step-box">
             <h3>Adım 2: Analizi Başlat</h3>
             <p>Kilidi açtıktan sonra, aşağıdaki asıl tarama kodunu kopyala ve aynı konsol ekranına yapıştırıp Enter'a bas. Oyun Kafası menüsü otomatik olarak açılacaktır.</p>
-            <textarea id="scriptCode" class="code-area" spellcheck="false" readonly>(function() {
-    if (document.getElementById('ok-overlay-panel')) document.getElementById('ok-overlay-panel').remove();
-    const styles = `#ok-overlay-panel{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(9,9,11,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:9999999;display:flex;color:#fafafa;font-family:system-ui,-apple-system,sans-serif;animation:okFadeIn 0.3s ease}.ok-sidebar{width:320px;background:rgba(24,24,27,0.9);border-right:1px solid rgba(255,255,255,0.05);padding:30px 20px;display:flex;flex-direction:column;gap:20px}.ok-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.ok-logo-text{font-size:20px;font-weight:800;background:linear-gradient(90deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.ok-close{cursor:pointer;color:#a1a1aa;font-size:24px;border:none;background:none}.ok-btn{background:#3b82f6;color:white;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer}.ok-btn:disabled{background:#3f3f46;color:#a1a1aa;cursor:not-allowed}.ok-stats{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:20px;text-align:center}.ok-stats h3{font-size:12px;color:#a1a1aa;margin-bottom:8px}.ok-stats p{font-size:32px;font-weight:700;color:#60a5fa;margin:0}.ok-content{flex:1;padding:40px;overflow-y:auto}.ok-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;align-items:start;align-content:start}.ok-card{background:rgba(24,24,27,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between}.ok-user{display:flex;align-items:center;gap:12px}.ok-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#27272a}.ok-username{font-size:14px;font-weight:600;color:#e4e4e7;text-decoration:none}.ok-action{background:transparent;border:1px solid #ef4444;color:#ef4444;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer}.ok-action:disabled{border-color:#3f3f46;color:#a1a1aa;cursor:not-allowed}.ok-loading{color:#a1a1aa;font-size:15px;display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:15px}.ok-spinner{border:3px solid rgba(255,255,255,0.1);border-top:3px solid #3b82f6;border-radius:50%;width:30px;height:30px;animation:okSpin 1s linear infinite}@keyframes okSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}`;
-    const styleEl = document.createElement('style');
-    styleEl.innerHTML = styles;
-    document.head.appendChild(styleEl);
-    
-    const overlay = document.createElement('div');
-    overlay.id = 'ok-overlay-panel';
-    overlay.innerHTML = `<div class="ok-sidebar"><div class="ok-header"><div class="ok-logo-text">OYUN KAFASI</div><button class="ok-close" onclick="document.getElementById('ok-overlay-panel').remove()">×</button></div><button class="ok-btn" id="ok-start-btn">Taramayı Başlat</button><div class="ok-stats"><h3>Geri Takip Etmeyenler</h3><p id="ok-count">0</p></div><div class="ok-stats" style="margin-top:auto;"><h3>Durum</h3><p id="ok-status">Hazır</p></div></div><div class="ok-content"><div id="ok-results" class="ok-grid"><div style="grid-column:1/-1;text-align:center;">Taramayı başlatmak için sol menüyü kullanın.</div></div></div>`;
-    document.body.appendChild(overlay);
+            <div class="code-preview">(function() { ... ÇALIŞAN GERÇEK KOD ... })();</div>
+            <button class="btn" id="btn2" onclick="copyMain()">2. Asıl Kodu Kopyala</button>
+        </div>
+    </div>
 
-    document.getElementById('ok-start-btn').addEventListener('click', async function() {
-        const btn = this;
-        const resultsEl = document.getElementById('ok-results');
-        const statusEl = document.getElementById('ok-status');
-        const countEl = document.getElementById('ok-count');
+    <!-- HİÇBİR HTML BOZULMASI OLMASIN DİYE KOD BURADA GİZLİ VE HAM OLARAK TUTULUYOR -->
+    <script id="raw-code" type="text/plain">
+(function() {
+    const existing = document.getElementById('ok-overlay-panel');
+    if (existing) existing.remove();
+
+    const style = document.createElement('style');
+    style.innerHTML = `
+        #ok-overlay-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9, 9, 11, 0.95); z-index: 999999; display: flex; color: #fff; font-family: sans-serif; }
+        .ok-sidebar { width: 320px; background: #18181b; padding: 30px 20px; display: flex; flex-direction: column; gap: 20px; border-right: 1px solid #333; }
+        .ok-btn { background: #3b82f6; color: #fff; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; }
+        .ok-btn:disabled { background: #3f3f46; color: #a1a1aa; cursor: not-allowed; }
+        .ok-content { flex: 1; padding: 30px; overflow-y: auto; }
+        .ok-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; align-content: start; }
+        .ok-card { background: #27272a; padding: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #3f3f46; }
+        .ok-avatar { width: 45px; height: 45px; border-radius: 50%; }
+        .ok-action { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    `;
+    document.head.appendChild(style);
+
+    const panel = document.createElement('div');
+    panel.id = 'ok-overlay-panel';
+    panel.innerHTML = `
+        <div class="ok-sidebar">
+            <h2 style="margin:0; color:#60a5fa;">OYUN KAFASI</h2>
+            <p style="font-size:13px; color:#a1a1aa;">Gerçek API taraması aktiftir.</p>
+            <button class="ok-btn" id="ok-start">Taramayı Başlat</button>
+            <div style="background:#27272a; padding:15px; border-radius:10px; text-align:center;">
+                <p style="margin:0; font-size:12px; color:#a1a1aa;">GERİ TAKİP ETMEYENLER</p>
+                <p id="ok-count" style="margin:10px 0 0 0; font-size:32px; font-weight:bold; color:#60a5fa;">0</p>
+            </div>
+            <p style="margin-top:auto;">Durum: <span id="ok-status" style="color:#4ade80;">Hazır</span></p>
+            <button class="ok-btn" style="background:transparent; border:1px solid #ef4444; color:#ef4444;" onclick="document.getElementById('ok-overlay-panel').remove()">Paneli Kapat</button>
+        </div>
+        <div class="ok-content"><div id="ok-results" class="ok-grid"></div></div>
+    `;
+    document.body.appendChild(panel);
+
+    document.getElementById('ok-start').addEventListener('click', async () => {
+        const btn = document.getElementById('ok-start');
+        const status = document.getElementById('ok-status');
+        const results = document.getElementById('ok-results');
+        const count = document.getElementById('ok-count');
+        
         btn.disabled = true;
-        resultsEl.innerHTML = `<div style="grid-column:1/-1;" class="ok-loading"><div class="ok-spinner"></div>Gerçek veriler çekiliyor... Lütfen bekleyin.</div>`;
+        results.innerHTML = '';
+        
         try {
             const getCookie = (name) => {
                 const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -76,16 +109,17 @@
             const csrf = getCookie('csrftoken');
             const userId = getCookie('ds_user_id');
             const appId = '936619743392459';
-            if (!userId || !csrf) throw new Error("Oturum bulunamadı. Lütfen Instagram'a giriş yapın.");
-            const fetchList = async (type, statusText) => {
+
+            if (!userId || !csrf) throw new Error("Oturum bulunamadı. Lütfen giriş yapın.");
+
+            const fetchList = async (type, text) => {
                 let users = [];
                 let maxId = '';
                 let hasMore = true;
                 while (hasMore) {
-                    statusEl.innerText = `${statusText} (${users.length})`;
-                    const url = `https://www.instagram.com/api/v1/friendships/${userId}/${type}/?count=100${maxId ? '&max_id=' + maxId : ''}`;
-                    const res = await fetch(url, { headers: { 'X-IG-App-ID': appId, 'X-CSRFToken': csrf } });
-                    if (!res.ok) throw new Error('Instagram API engeli oluştu.');
+                    status.innerText = `${text} (${users.length})`;
+                    const res = await fetch(`https://www.instagram.com/api/v1/friendships/${userId}/${type}/?count=100${maxId ? '&max_id=' + maxId : ''}`, { headers: { 'X-IG-App-ID': appId, 'X-CSRFToken': csrf } });
+                    if (!res.ok) throw new Error('Instagram sınırlandırdı.');
                     const data = await res.json();
                     users = users.concat(data.users);
                     hasMore = !!data.next_max_id;
@@ -94,64 +128,68 @@
                 }
                 return users;
             };
-            statusEl.innerText = "Takip Edilenler Çekiliyor...";
+
             const following = await fetchList('following', 'Takip Edilenler');
-            statusEl.innerText = "Takipçiler Çekiliyor...";
             const followers = await fetchList('followers', 'Takipçiler');
-            statusEl.innerText = "Hesaplanıyor...";
+            
+            status.innerText = "Hesaplanıyor...";
             const followersMap = new Set(followers.map(u => u.pk));
             const unfollowers = following.filter(u => !followersMap.has(u.pk));
-            countEl.innerText = unfollowers.length;
-            statusEl.innerText = "Tamamlandı";
-            resultsEl.innerHTML = "";
-            if (unfollowers.length === 0) {
-                resultsEl.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:#4ade80;">Herkes seni geri takip ediyor.</div>`;
+            
+            count.innerText = unfollowers.length;
+            status.innerText = "Tamamlandı!";
+            
+            if(unfollowers.length === 0) {
+                results.innerHTML = '<p style="grid-column:1/-1;">Herkes seni geri takip ediyor!</p>';
                 return;
             }
+
             unfollowers.forEach(user => {
-                const card = document.createElement('div');
-                card.className = 'ok-card';
-                const pic = user.profile_pic_url || '';
-                const uname = user.username || 'user';
-                const uid = user.pk || '';
-                card.innerHTML = `<div class="ok-user"><img src="${pic}" class="ok-avatar"><a href="https://instagram.com/${uname}" target="_blank" class="ok-username">@${uname}</a></div><button class="ok-action" data-id="${uid}">Takipten Çık</button>`;
-                resultsEl.appendChild(card);
+                const div = document.createElement('div');
+                div.className = 'ok-card';
+                div.innerHTML = `
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <img src="${user.profile_pic_url}" class="ok-avatar">
+                        <a href="https://instagram.com/${user.username}" target="_blank" style="color:#fff; text-decoration:none; font-weight:bold;">@${user.username}</a>
+                    </div>
+                    <button class="ok-action" data-id="${user.pk}">Çık</button>
+                `;
+                results.appendChild(div);
             });
-            document.querySelectorAll('.ok-action').forEach(button => {
-                button.addEventListener('click', async function() {
-                    const targetId = this.getAttribute('data-id');
-                    this.innerText = 'Çıkılıyor...';
+
+            document.querySelectorAll('.ok-action').forEach(b => {
+                b.addEventListener('click', async function() {
                     this.disabled = true;
+                    this.innerText = '...';
                     try {
-                        const res = await fetch(`https://www.instagram.com/api/v1/friendships/destroy/${targetId}/`, {
+                        const res = await fetch(`https://www.instagram.com/api/v1/friendships/destroy/${this.getAttribute('data-id')}/`, {
                             method: 'POST',
                             headers: { 'X-IG-App-ID': appId, 'X-CSRFToken': csrf }
                         });
-                        if (res.ok) {
-                            this.innerText = 'Çıkıldı';
-                            this.style.opacity = '0.4';
-                        } else {
-                            this.innerText = 'Hata';
-                            this.disabled = false;
+                        if(res.ok) { 
+                            this.innerText = 'Çıkıldı'; 
+                            this.style.background = '#3f3f46'; 
+                        } else { 
+                            this.innerText = 'Hata'; 
+                            this.disabled = false; 
                         }
-                    } catch (e) {
-                        this.innerText = 'Hata';
+                    } catch(e) {
+                        this.innerText = 'Hata'; 
                         this.disabled = false;
                     }
                 });
             });
-        } catch (error) {
-            statusEl.innerText = "Hata";
-            resultsEl.innerHTML = `<div style="grid-column:1/-1;color:#ef4444;text-align:center;">${error.message}</div>`;
+
+        } catch(e) {
+            status.innerText = "Hata: " + e.message;
+            status.style.color = "#ef4444";
         } finally {
-            btn.innerText = "Yeniden Tara";
             btn.disabled = false;
+            btn.innerText = "Yeniden Tara";
         }
     });
-})();</textarea>
-            <button class="btn" id="btn2" onclick="copyMain()">2. Asıl Kodu Kopyala</button>
-        </div>
-    </div>
+})();
+    </script>
 
     <script>
         function copyAllow() {
@@ -168,7 +206,8 @@
         }
 
         function copyMain() {
-            const code = document.getElementById('scriptCode').value;
+            // Ham kodu doğrudan kopyalar, HTML'in bozması imkansızdır.
+            const code = document.getElementById('raw-code').textContent.trim();
             navigator.clipboard.writeText(code).then(() => {
                 const btn = document.getElementById('btn2');
                 btn.innerText = "Kopyalandı! Instagram'a Geç";
