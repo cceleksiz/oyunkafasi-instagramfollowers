@@ -22,7 +22,7 @@
         .steps { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); padding: 20px; border-radius: 12px; margin-bottom: 24px; }
         .steps h3 { font-size: 16px; margin-bottom: 12px; color: var(--primary); }
         .steps ol { padding-left: 20px; color: var(--text); font-size: 14px; line-height: 1.6; }
-        .code-box { background: #000; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px; color: #4ade80; overflow-x: auto; margin-bottom: 16px; border: 1px solid var(--border); }
+        .code-area { width: 100%; height: 120px; background: #000; color: #4ade80; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; resize: none; margin-bottom: 16px; outline: none; }
         .btn { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn.success { background: #10b981; }
@@ -33,31 +33,190 @@
     <div class="container">
         <div class="header">
             <h1>Oyun Kafası Hızlı Analiz</h1>
-            <p>Instagram'da seni geri takip etmeyenleri saniyeler içinde bul. Tarayıcı konsolu üzerinden çalışır.</p>
+            <p>Instagram'da seni geri takip etmeyenleri saniyeler içinde bul. Doğrudan tarayıcında, %100 güvenle çalışır.</p>
         </div>
 
         <div class="steps">
             <h3>Nasıl Kullanılır?</h3>
             <ol>
                 <li>Aşağıdaki butona tıklayarak özel kodu kopyala.</li>
-                <li>Bilgisayarından <b>instagram.com</b>'a gir.</li>
+                <li>Bilgisayarından <b>instagram.com</b>'a gir (Kendi hesabın açık olsun).</li>
                 <li>Ekranda sağ tıklayıp <b>İncele</b> (Inspect) seçeneğini seç.</li>
                 <li>Açılan panelden <b>Console</b> (Konsol) sekmesine geç.</li>
-                <li>Konsola <b>allow pasting</b> yazıp Enter'a bas (Güvenlik kilidini açmak için).</li>
-                <li>Kopyaladığın uzun kodu oraya yapıştır ve <b>Enter</b>'a bas.</li>
+                <li>Önce <b>allow pasting</b> yazıp Enter'a bas (Tarayıcı kilidini açmak için).</li>
+                <li>Sonra kopyaladığın kodu yapıştır ve <b>Enter</b>'a bas.</li>
             </ol>
         </div>
 
-        <div class="code-box" id="scriptCode" style="max-height: 150px; overflow-y: scroll;">
-(function(){if(document.getElementById('ok-overlay-panel')){document.getElementById('ok-overlay-panel').remove()}const styles=`#ok-overlay-panel{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(9,9,11,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:9999999;display:flex;color:#fafafa;font-family:system-ui,-apple-system,sans-serif;animation:okFadeIn 0.3s ease}@keyframes okFadeIn{from{opacity:0}to{opacity:1}}.ok-sidebar{width:320px;background:rgba(24,24,27,0.9);border-right:1px solid rgba(255,255,255,0.05);padding:30px 20px;display:flex;flex-direction:column;gap:20px}.ok-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.ok-logo-text{font-size:20px;font-weight:800;letter-spacing:-0.5px;background:linear-gradient(90deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.ok-close{cursor:pointer;color:#a1a1aa;font-size:24px;border:none;background:none}.ok-close:hover{color:#fff}.ok-btn{background:#3b82f6;color:white;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:0.2s;box-shadow:0 4px 14px rgba(59,130,246,0.3)}.ok-btn:hover{background:#2563eb;transform:translateY(-1px)}.ok-btn:disabled{background:#3f3f46;color:#a1a1aa;cursor:not-allowed;box-shadow:none}.ok-stats{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:20px;text-align:center}.ok-stats h3{font-size:12px;color:#a1a1aa;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:500}.ok-stats p{font-size:32px;font-weight:700;color:#60a5fa;margin:0}.ok-content{flex:1;padding:40px;overflow-y:auto}.ok-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}.ok-card{background:rgba(24,24,27,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:16px;display:flex;align-items:center;justify-content:space-between;transition:0.2s}.ok-card:hover{background:rgba(39,39,42,0.8);border-color:rgba(255,255,255,0.1);transform:translateY(-2px)}.ok-user{display:flex;align-items:center;gap:12px}.ok-avatar{width:40px;height:40px;background:linear-gradient(135deg,#3f3f46,#27272a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#e4e4e7}.ok-username{font-size:14px;font-weight:600;color:#e4e4e7;text-decoration:none}.ok-username:hover{text-decoration:underline}.ok-action{background:transparent;border:1px solid #ef4444;color:#ef4444;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:0.2s}.ok-action:hover{background:#ef4444;color:white}.ok-loading{color:#a1a1aa;font-size:15px;display:flex;align-items:center;justify-content:center;height:100%;flex-direction:column;gap:15px}.ok-spinner{border:3px solid rgba(255,255,255,0.1);border-top:3px solid #3b82f6;border-radius:50%;width:30px;height:30px;animation:okSpin 1s linear infinite}@keyframes okSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}`;const styleEl=document.createElement('style');styleEl.innerHTML=styles;document.head.appendChild(styleEl);const overlay=document.createElement('div');overlay.id='ok-overlay-panel';overlay.innerHTML='<div class="ok-sidebar"><div class="ok-header"><div class="ok-logo-text">OYUN KAFASI</div><button class="ok-close" onclick="document.getElementById(\\'ok-overlay-panel\\').remove()">×</button></div><p style="font-size:13px;color:#a1a1aa;line-height:1.5;margin-bottom:10px;">Tarama işlemi Instagram arka plan API\\'sini kullanır. Güvenliğiniz için işlem aralarına yapay gecikmeler eklenmiştir.</p><button class="ok-btn" id="ok-start-btn">Taramayı Başlat</button><div class="ok-stats"><h3>Geri Takip Etmeyenler</h3><p id="ok-count">0</p></div><div class="ok-stats" style="margin-top:auto;"><h3>Durum</h3><p id="ok-status" style="font-size:14px;color:#e4e4e7;margin-top:5px;font-weight:500;">Hazır</p></div></div><div class="ok-content"><div id="ok-results" class="ok-grid"><div style="grid-column:1/-1;height:100%;display:flex;align-items:center;justify-content:center;color:#52525b;font-size:18px;font-weight:500;">Taramayı başlatmak için sol menüyü kullanın.</div></div></div>';document.body.appendChild(overlay);document.getElementById('ok-start-btn').addEventListener('click',async function(){const btn=this;const resultsEl=document.getElementById('ok-results');const statusEl=document.getElementById('ok-status');const countEl=document.getElementById('ok-count');btn.disabled=true;resultsEl.innerHTML='<div style="grid-column:1/-1;" class="ok-loading"><div class="ok-spinner"></div>Veriler çekiliyor ve karşılaştırılıyor... Lütfen bekleyin.</div>';statusEl.innerText="Taranıyor...";setTimeout(()=>{const unfollowers=[{username:'oyun_krali',id:'1'},{username:'valorant_tr',id:'2'},{username:'esports_gundem',id:'3'},{username:'gamer_girl99',id:'4'},{username:'noob_master',id:'5'}];countEl.innerText=unfollowers.length;statusEl.innerText="Tamamlandı";resultsEl.innerHTML="";unfollowers.forEach(user=>{const initial=user.username.charAt(0).toUpperCase();const card=document.createElement('div');card.className='ok-card';card.innerHTML='<div class="ok-user"><div class="ok-avatar">'+initial+'</div><a href="https://instagram.com/'+user.username+'" target="_blank" class="ok-username">@'+user.username+'</a></div><button class="ok-action" onclick="this.parentElement.style.opacity=\\'0.5\\';this.innerText=\\'Çıkıldı\\';this.disabled=true;">Takipten Çık</button>';resultsEl.appendChild(card)});btn.innerText="Yeniden Tara";btn.disabled=false},2500)})})();
+        <!-- Kullanıcının kopyalayacağı çalışan gerçek kod (Textarea içinde olduğu için bozulmaz) -->
+        <textarea id="scriptCode" class="code-area" spellcheck="false" readonly>
+(function() {
+    if (document.getElementById('ok-overlay-panel')) {
+        document.getElementById('ok-overlay-panel').remove();
+    }
+    const styles = `
+        #ok-overlay-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(9, 9, 11, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9999999; display: flex; color: #fafafa; font-family: system-ui, -apple-system, sans-serif; animation: okFadeIn 0.3s ease; }
+        .ok-sidebar { width: 320px; background: rgba(24, 24, 27, 0.9); border-right: 1px solid rgba(255,255,255,0.05); padding: 30px 20px; display: flex; flex-direction: column; gap: 20px; }
+        .ok-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .ok-logo-text { font-size: 20px; font-weight: 800; background: linear-gradient(90deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .ok-close { cursor: pointer; color: #a1a1aa; font-size: 24px; border: none; background: none; }
+        .ok-btn { background: #3b82f6; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; }
+        .ok-btn:disabled { background: #3f3f46; color: #a1a1aa; cursor: not-allowed; }
+        .ok-stats { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; text-align: center; }
+        .ok-stats h3 { font-size: 12px; color: #a1a1aa; margin-bottom: 8px; }
+        .ok-stats p { font-size: 32px; font-weight: 700; color: #60a5fa; margin: 0; }
+        .ok-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .ok-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; align-items: start; align-content: start; }
+        .ok-card { background: rgba(24, 24, 27, 0.6); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; display: flex; align-items: center; justify-content: space-between; }
+        .ok-user { display: flex; align-items: center; gap: 12px; }
+        .ok-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #27272a; }
+        .ok-username { font-size: 14px; font-weight: 600; color: #e4e4e7; text-decoration: none; }
+        .ok-action { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+        .ok-action:disabled { border-color: #3f3f46; color: #a1a1aa; cursor: not-allowed; }
+        .ok-loading { color: #a1a1aa; font-size: 15px; display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; gap: 15px; }
+        .ok-spinner { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #3b82f6; border-radius: 50%; width: 30px; height: 30px; animation: okSpin 1s linear infinite; }
+        @keyframes okSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    `;
+    const styleEl = document.createElement('style');
+    styleEl.innerHTML = styles;
+    document.head.appendChild(styleEl);
+
+    const overlay = document.createElement('div');
+    overlay.id = 'ok-overlay-panel';
+    overlay.innerHTML = `
+        <div class="ok-sidebar">
+            <div class="ok-header">
+                <div class="ok-logo-text">OYUN KAFASI</div>
+                <button class="ok-close" onclick="document.getElementById('ok-overlay-panel').remove()">×</button>
+            </div>
+            <button class="ok-btn" id="ok-start-btn">Taramayı Başlat</button>
+            <div class="ok-stats"><h3>Geri Takip Etmeyenler</h3><p id="ok-count">0</p></div>
+            <div class="ok-stats" style="margin-top: auto;"><h3>Durum</h3><p id="ok-status">Hazır</p></div>
         </div>
+        <div class="ok-content">
+            <div id="ok-results" class="ok-grid">
+                <div style="grid-column: 1 / -1; text-align: center;">Taramayı başlatmak için sol menüyü kullanın.</div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    document.getElementById('ok-start-btn').addEventListener('click', async function() {
+        const btn = this;
+        const resultsEl = document.getElementById('ok-results');
+        const statusEl = document.getElementById('ok-status');
+        const countEl = document.getElementById('ok-count');
+
+        btn.disabled = true;
+        resultsEl.innerHTML = '<div style="grid-column: 1 / -1;" class="ok-loading"><div class="ok-spinner"></div>Gerçek veriler çekiliyor... Lütfen bekleyin.</div>';
+
+        try {
+            const getCookie = (name) => {
+                const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                return match ? match[2] : null;
+            };
+            const csrf = getCookie('csrftoken');
+            const userId = getCookie('ds_user_id');
+            const appId = '936619743392459';
+
+            if (!userId || !csrf) throw new Error("Oturum bulunamadı. Lütfen Instagram'a giriş yapın.");
+
+            const fetchList = async (type, statusText) => {
+                let users = [];
+                let maxId = '';
+                let hasMore = true;
+                while (hasMore) {
+                    statusEl.innerText = `${statusText} (${users.length})`;
+                    const url = `https://www.instagram.com/api/v1/friendships/${userId}/${type}/?count=100${maxId ? '&max_id=' + maxId : ''}`;
+                    const res = await fetch(url, { headers: { 'X-IG-App-ID': appId, 'X-CSRFToken': csrf } });
+                    if (!res.ok) throw new Error('Instagram API engeli oluştu. Daha sonra tekrar dene.');
+                    const data = await res.json();
+                    users = users.concat(data.users);
+                    hasMore = !!data.next_max_id;
+                    maxId = data.next_max_id;
+                    await new Promise(r => setTimeout(r, 1500));
+                }
+                return users;
+            };
+
+            statusEl.innerText = "Takip Edilenler Çekiliyor...";
+            const following = await fetchList('following', 'Takip Edilenler');
+
+            statusEl.innerText = "Takipçiler Çekiliyor...";
+            const followers = await fetchList('followers', 'Takipçiler');
+
+            statusEl.innerText = "Hesaplanıyor...";
+
+            const followersMap = new Set(followers.map(u => u.pk));
+            const unfollowers = following.filter(u => !followersMap.has(u.pk));
+
+            countEl.innerText = unfollowers.length;
+            statusEl.innerText = "Tamamlandı";
+            resultsEl.innerHTML = "";
+
+            if (unfollowers.length === 0) {
+                resultsEl.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #4ade80;">Herkes seni geri takip ediyor.</div>';
+                return;
+            }
+
+            unfollowers.forEach(user => {
+                const card = document.createElement('div');
+                card.className = 'ok-card';
+                const pic = user.profile_pic_url || '';
+                const uname = user.username || 'user';
+                const uid = user.pk || '';
+                card.innerHTML = `
+                    <div class="ok-user">
+                        <img src="${pic}" class="ok-avatar">
+                        <a href="https://instagram.com/${uname}" target="_blank" class="ok-username">@${uname}</a>
+                    </div>
+                    <button class="ok-action" data-id="${uid}">Takipten Çık</button>
+                `;
+                resultsEl.appendChild(card);
+            });
+
+            document.querySelectorAll('.ok-action').forEach(button => {
+                button.addEventListener('click', async function() {
+                    const targetId = this.getAttribute('data-id');
+                    this.innerText = 'Çıkılıyor...';
+                    this.disabled = true;
+                    try {
+                        const res = await fetch(`https://www.instagram.com/api/v1/friendships/destroy/${targetId}/`, {
+                            method: 'POST',
+                            headers: { 'X-IG-App-ID': appId, 'X-CSRFToken': csrf }
+                        });
+                        if (res.ok) {
+                            this.innerText = 'Çıkıldı';
+                            this.style.opacity = '0.4';
+                        } else {
+                            this.innerText = 'Hata';
+                            this.disabled = false;
+                        }
+                    } catch (e) {
+                        this.innerText = 'Hata';
+                        this.disabled = false;
+                    }
+                });
+            });
+
+        } catch (error) {
+            statusEl.innerText = "Hata";
+            resultsEl.innerHTML = `<div style="grid-column: 1 / -1; color: #ef4444; text-align: center;">${error.message}</div>`;
+        } finally {
+            btn.innerText = "Yeniden Tara";
+            btn.disabled = false;
+        }
+    });
+})();
+        </textarea>
 
         <button class="btn" id="copyBtn" onclick="copyCode()">Kodu Kopyala</button>
     </div>
 
     <script>
         function copyCode() {
-            const code = document.getElementById('scriptCode').innerText;
+            // Textarea'daki kodun değerini alıp panoya kopyalar
+            const code = document.getElementById('scriptCode').value;
             navigator.clipboard.writeText(code).then(() => {
                 const btn = document.getElementById('copyBtn');
                 btn.innerText = "Kopyalandı! Instagram'a Geç";
