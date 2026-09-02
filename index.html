@@ -69,7 +69,9 @@
         }
 
         function copyMain() {
-            const code = document.getElementById('scriptCode').value;
+            // Textarea'daki ünlem işareti hatası düzeltildi!
+            let code = document.getElementById('scriptCode').value;
+            code = code.replace("})})!}catch(error)", "})})}catch(error)");
             navigator.clipboard.writeText(code).then(() => {
                 const btn = document.getElementById('btn2');
                 btn.innerText = "Kopyalandı! Instagram'a Geç";
