@@ -22,11 +22,11 @@
         .step-box { background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); padding: 20px; border-radius: 12px; margin-bottom: 20px; }
         .step-box h3 { font-size: 16px; margin-bottom: 8px; color: var(--primary); }
         .step-box p { font-size: 13.5px; color: var(--text); margin-bottom: 15px; line-height: 1.6; }
-        .copy-input { width: 100%; background: #000; color: #4ade80; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 14px; margin-bottom: 12px; outline: none; text-align: center; font-weight: bold; }
         .btn { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn.success { background: #10b981; }
         .code-preview { background: #000; color: #a1a1aa; border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-size: 11px; margin-bottom: 12px; font-family: monospace; }
+        .warning-box { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: 12px; border-radius: 8px; margin-top: 15px; font-size: 13px; color: #fca5a5; line-height: 1.5; }
     </style>
 </head>
 <body>
@@ -40,9 +40,10 @@
         <!-- ADIM 1 -->
         <div class="step-box">
             <h3>Adım 1: Tarayıcı Kilidini Aç</h3>
-            <p>Bilgisayarından Instagram'a gir, ekrana sağ tıklayıp <b>İncele</b> de ve <b>Console</b> sekmesine geç. Chrome'un güvenlik kilidini açmak için aşağıdaki yazıyı kopyalayıp konsola yapıştır ve Enter'a bas.</p>
-            <input type="text" id="allowCode" class="copy-input" value="allow pasting" readonly>
-            <button class="btn" id="btn1" onclick="copyAllow()">1. Kodu Kopyala</button>
+            <p>Bilgisayarından Instagram'a gir, ekrana sağ tıklayıp <b>İncele</b> de ve <b>Console</b> sekmesine geç. Chrome'un güvenlik kilidini açmak için konsola <strong style="color: #4ade80; font-family: monospace; font-size: 15px;">allow pasting</strong> yazıp Enter'a bas.</p>
+            <div class="warning-box">
+                ⚠️ <b>ÖNEMLİ NOT:</b> Güvenlik kilidini açmak için bu metni kopyalayıp yapıştırmak işe yaramaz. Boşluğa dikkat ederek klavyenizle <b>elle yazmanız</b> gerekmektedir.
+            </div>
         </div>
 
         <!-- ADIM 2 -->
@@ -50,7 +51,7 @@
             <h3>Adım 2: Analizi Başlat</h3>
             <p>Kilidi açtıktan sonra, aşağıdaki asıl tarama kodunu kopyala ve aynı konsol ekranına yapıştırıp Enter'a bas. Oyun Kafası menüsü otomatik olarak açılacaktır.</p>
             <div class="code-preview">(function() { ... ÇALIŞAN GERÇEK KOD ... })();</div>
-            <button class="btn" id="btn2" onclick="copyMain()">2. Asıl Kodu Kopyala</button>
+            <button class="btn" id="btn2" onclick="copyMain()">Asıl Kodu Kopyala</button>
         </div>
     </div>
 
@@ -192,19 +193,6 @@
     </script>
 
     <script>
-        function copyAllow() {
-            const code = document.getElementById('allowCode').value;
-            navigator.clipboard.writeText(code).then(() => {
-                const btn = document.getElementById('btn1');
-                btn.innerText = "Kopyalandı!";
-                btn.classList.add('success');
-                setTimeout(() => {
-                    btn.innerText = "1. Kodu Kopyala";
-                    btn.classList.remove('success');
-                }, 2000);
-            });
-        }
-
         function copyMain() {
             // Ham kodu doğrudan kopyalar, HTML'in bozması imkansızdır.
             const code = document.getElementById('raw-code').textContent.trim();
@@ -213,7 +201,7 @@
                 btn.innerText = "Kopyalandı! Instagram'a Geç";
                 btn.classList.add('success');
                 setTimeout(() => {
-                    btn.innerText = "2. Asıl Kodu Kopyala";
+                    btn.innerText = "Asıl Kodu Kopyala";
                     btn.classList.remove('success');
                 }, 3000);
             });
