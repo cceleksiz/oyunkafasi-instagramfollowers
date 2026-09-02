@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oyun Kafası | Instagram Hızlı Analiz</title>
+    <style>
+        :root {
+            --bg: #09090b;
+            --surface: #18181b;
+            --primary: #3b82f6;
+            --text: #fafafa;
+            --muted: #a1a1aa;
+            --border: #27272a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .container { background: var(--surface); border: 1px solid var(--border); padding: 40px; border-radius: 16px; max-width: 600px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { font-size: 24px; margin-bottom: 8px; font-weight: 700; letter-spacing: -0.5px; }
+        .header p { color: var(--muted); font-size: 14px; line-height: 1.5; }
+        .steps { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); padding: 20px; border-radius: 12px; margin-bottom: 24px; }
+        .steps h3 { font-size: 16px; margin-bottom: 12px; color: var(--primary); }
+        .steps ol { padding-left: 20px; color: var(--text); font-size: 14px; line-height: 1.6; }
+        .code-box { background: #000; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 13px; color: #4ade80; overflow-x: auto; margin-bottom: 16px; border: 1px solid var(--border); }
+        .btn { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn.success { background: #10b981; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Oyun Kafası Hızlı Analiz</h1>
+            <p>Instagram'da seni geri takip etmeyenleri saniyeler içinde bul. Tarayıcı konsolu üzerinden çalışır.</p>
+        </div>
+
+        <div class="steps">
+            <h3>Nasıl Kullanılır?</h3>
+            <ol>
+                <li>Aşağıdaki butona tıklayarak özel kodu kopyala.</li>
+                <li>Bilgisayarından <b>instagram.com</b>'a gir.</li>
+                <li>Ekranda sağ tıklayıp <b>İncele</b> (Inspect) seçeneğini seç.</li>
+                <li>Açılan panelden <b>Console</b> (Konsol) sekmesine geç.</li>
+                <li>Kopyaladığın kodu oraya yapıştır ve <b>Enter</b>'a bas.</li>
+            </ol>
+        </div>
+
+        <div class="code-box" id="scriptCode">
+var s=document.createElement('script');s.src='https://cceleksiz.github.io/oyunkafasi-instagramfollowers/app.js';document.body.appendChild(s);
+        </div>
+
+        <button class="btn" id="copyBtn" onclick="copyCode()">Kodu Kopyala</button>
+    </div>
+
+    <script>
+        function copyCode() {
+            const code = document.getElementById('scriptCode').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.innerText = "Kopyalandı! Instagram'a Geç";
+                btn.classList.add('success');
+                setTimeout(() => {
+                    btn.innerText = "Kodu Kopyala";
+                    btn.classList.remove('success');
+                }, 3000);
+            });
+        }
+    </script>
+</body>
+</html>
