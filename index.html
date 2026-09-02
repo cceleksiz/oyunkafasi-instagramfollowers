@@ -69,7 +69,6 @@
         }
 
         function copyMain() {
-            // Textarea'daki ünlem işareti hatası düzeltildi!
             let code = document.getElementById('scriptCode').value;
             code = code.replace("})})!}catch(error)", "})})}catch(error)");
             navigator.clipboard.writeText(code).then(() => {
