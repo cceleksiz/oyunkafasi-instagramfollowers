@@ -64,7 +64,7 @@
     style.innerHTML = `
         #ok-overlay-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9, 9, 11, 0.95); z-index: 999999; display: flex; color: #fff; font-family: sans-serif; }
         .ok-sidebar { width: 320px; background: #18181b; padding: 30px 20px; display: flex; flex-direction: column; gap: 20px; border-right: 1px solid #333; }
-        .ok-btn { background: #06b6d4; color: #fff; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; }
+        .ok-btn { background: #8b5cf6; color: #fff; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; }
         .ok-btn:disabled { background: #3f3f46; color: #a1a1aa; cursor: not-allowed; }
         .ok-content { flex: 1; padding: 30px; overflow-y: auto; }
         .ok-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; align-content: start; }
@@ -78,12 +78,12 @@
     panel.id = 'ok-overlay-panel';
     panel.innerHTML = `
         <div class="ok-sidebar">
-            <h2 style="margin:0; color:#06b6d4;">OYUN KAFASI V4</h2>
-            <p style="font-size:13px; color:#a1a1aa;">Gelişmiş XMLHttpRequest Unfollow modülü devrede.</p>
+            <h2 style="margin:0; color:#8b5cf6;">OYUN KAFASI V5</h2>
+            <p style="font-size:13px; color:#a1a1aa;">Web Unfollow Method devrededir.</p>
             <button class="ok-btn" id="ok-start">Taramayı Başlat</button>
             <div style="background:#27272a; padding:15px; border-radius:10px; text-align:center;">
                 <p style="margin:0; font-size:12px; color:#a1a1aa;">GERİ TAKİP ETMEYENLER</p>
-                <p id="ok-count" style="margin:10px 0 0 0; font-size:32px; font-weight:bold; color:#06b6d4;">0</p>
+                <p id="ok-count" style="margin:10px 0 0 0; font-size:32px; font-weight:bold; color:#8b5cf6;">0</p>
             </div>
             <p style="margin-top:auto;">Durum: <span id="ok-status" style="color:#4ade80;">Hazır</span></p>
             <button class="ok-btn" style="background:transparent; border:1px solid #ef4444; color:#ef4444;" onclick="document.getElementById('ok-overlay-panel').remove()">Paneli Kapat</button>
@@ -117,7 +117,7 @@
             let hasMore = true;
             
             while (hasMore) {
-                status.innerText = `Senin Takip Ettiklerin Toplanıyor: ${following.length} kişi...`;
+                status.innerText = `Takip Ettiklerin Toplanıyor: ${following.length} kişi...`;
                 const res = await fetch(`https://www.instagram.com/api/v1/friendships/${userId}/following/?count=100${maxId ? '&max_id=' + maxId : ''}`, { headers: { 'X-IG-App-ID': appId, 'X-CSRFToken': csrf } });
                 if (!res.ok) throw new Error('Instagram sınırlandırdı.');
                 const data = await res.json();
@@ -130,7 +130,7 @@
             const unfollowers = [];
             for (let i = 0; i < following.length; i++) {
                 const user = following[i];
-                status.innerText = `Tek Tek Kontrol Ediliyor: ${i + 1} / ${following.length}`;
+                status.innerText = `Kontrol Ediliyor: ${i + 1} / ${following.length}`;
                 
                 try {
                     const res = await fetch(`https://www.instagram.com/api/v1/friendships/show/${user.pk}/`, { 
@@ -169,7 +169,7 @@
                 results.appendChild(div);
             });
 
-            // YEPYENİ V4 TAKİPTEN ÇIKMA FONKSİYONU
+            // V5 (DAVID ARROYO REFERANSLI) KESİN ÇÖZÜM UNFOLLOW FONKSİYONU
             document.querySelectorAll('.ok-action').forEach(b => {
                 b.addEventListener('click', async function() {
                     this.disabled = true;
@@ -178,30 +178,25 @@
                     try {
                         const targetId = this.getAttribute('data-id');
                         
-                        // Güncellenmiş XHR başlıkları ile POST isteği
-                        const res = await fetch(`https://www.instagram.com/api/v1/friendships/destroy/${targetId}/`, {
+                        // /api/v1/ olmadan ve credentials: 'include' eklenerek gönderilen stabil istek
+                        const res = await fetch(`https://www.instagram.com/web/friendships/${targetId}/unfollow/`, {
                             method: 'POST',
                             headers: { 
-                                'X-IG-App-ID': appId, 
-                                'X-CSRFToken': csrf,
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'Content-Type': 'application/x-www-form-urlencoded'
+                                'content-type': 'application/x-www-form-urlencoded',
+                                'x-csrftoken': csrf
                             },
-                            // Instagram bazen boş POST isteklerini reddeder, bu yüzden hedef id'yi gövde olarak ekledik
-                            body: `user_id=${targetId}` 
+                            mode: 'cors',
+                            credentials: 'include'
                         });
                         
                         if(res.ok) { 
                             this.innerText = 'Çıkıldı'; 
                             this.style.background = '#3f3f46'; 
                         } else {
-                            // Hata kodunu konsola yazdır, sorunu daha rahat görelim
-                            console.error(`Takipten Çıkma Hatası: ${res.status} ${res.statusText}`);
                             this.innerText = 'Hata'; 
                             this.disabled = false; 
                         }
                     } catch(e) {
-                        console.error('Beklenmeyen bir hata oluştu:', e);
                         this.innerText = 'Hata'; 
                         this.disabled = false;
                     }
