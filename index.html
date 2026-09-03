@@ -56,6 +56,7 @@
     </div>
 
     <!-- HİÇBİR HTML BOZULMASI OLMASIN DİYE KOD BURADA GİZLİ VE HAM OLARAK TUTULUYOR -->
+    <!-- HİÇBİR HTML BOZULMASI OLMASIN DİYE KOD BURADA GİZLİ VE HAM OLARAK TUTULUYOR -->
     <script id="raw-code" type="text/plain">
 (function() {
     const existing = document.getElementById('ok-overlay-panel');
@@ -80,7 +81,7 @@
     panel.innerHTML = `
         <div class="ok-sidebar">
             <h2 style="margin:0; color:#60a5fa;">OYUN KAFASI</h2>
-            <p style="font-size:13px; color:#a1a1aa;">Gerçek API taraması aktiftir.</p>
+            <p style="font-size:13px; color:#a1a1aa;">Bireysel API taraması aktiftir.</p>
             <button class="ok-btn" id="ok-start">Taramayı Başlat</button>
             <div style="background:#27272a; padding:15px; border-radius:10px; text-align:center;">
                 <p style="margin:0; font-size:12px; color:#a1a1aa;">GERİ TAKİP ETMEYENLER</p>
@@ -113,31 +114,51 @@
 
             if (!userId || !csrf) throw new Error("Oturum bulunamadı. Lütfen giriş yapın.");
 
-            const fetchList = async (type, text) => {
-                let users = [];
-                let maxId = '';
-                let hasMore = true;
-                while (hasMore) {
-                    status.innerText = `${text} (${users.length})`;
-                    const res = await fetch(`https://www.instagram.com/api/v1/friendships/${userId}/${type}/?count=100${maxId ? '&max_id=' + maxId : ''}`, { headers: { 'X-IG-App-ID': appId, 'X-CSRFToken': csrf } });
-                    if (!res.ok) throw new Error('Instagram sınırlandırdı.');
-                    const data = await res.json();
-                    users = users.concat(data.users);
-                    hasMore = !!data.next_max_id;
-                    maxId = data.next_max_id;
-                    await new Promise(r => setTimeout(r, 1500));
-                }
-                return users;
-            };
+            // Adım 1: Sadece takip ettiklerini (following) çek
+            let following = [];
+            let maxId = '';
+            let hasMore = true;
+            
+            while (hasMore) {
+                status.innerText = `Takip Edilenler Çekiliyor (${following.length})`;
+                const res = await fetch(`https://www.instagram.com/api/v1/friendships/${userId}/following/?count=100${maxId ? '&max_id=' + maxId : ''}`, { headers: { 'X-IG-App-ID': appId, 'X-CSRFToken': csrf } });
+                if (!res.ok) throw new Error('Instagram sınırlandırdı (Takip Edilenler).');
+                const data = await res.json();
+                following = following.concat(data.users);
+                hasMore = !!data.next_max_id;
+                maxId = data.next_max_id;
+                await new Promise(r => setTimeout(r, 1000));
+            }
 
-            const following = await fetchList('following', 'Takip Edilenler');
-            const followers = await fetchList('followers', 'Takipçiler');
+            // Adım 2: Çekilen kişilerin arkadaşlık durumunu tek tek kontrol et
+            const unfollowers = [];
+            for (let i = 0; i < following.length; i++) {
+                const user = following[i];
+                status.innerText = `Analiz Ediliyor: ${i + 1} / ${following.length}`;
+                
+                try {
+                    const res = await fetch(`https://www.instagram.com/api/v1/friendships/show/${user.pk}/`, { 
+                        headers: { 'X-IG-App-ID': appId, 'X-CSRFToken': csrf } 
+                    });
+                    
+                    if (res.ok) {
+                        const friendshipData = await res.json();
+                        // followed_by özelliği false ise, o kişi seni geri takip etmiyordur
+                        if (friendshipData.followed_by === false) {
+                            unfollowers.push(user);
+                            count.innerText = unfollowers.length; // Ekranda anlık olarak sayıyı artır
+                        }
+                    } else {
+                        console.warn(`Durum çekilemedi (Limit aşımı riski): ${user.username}`);
+                    }
+                } catch(e) {
+                    console.error("Hata:", e);
+                }
+                
+                // Ban yememek için her profilde 1 saniye bekle
+                await new Promise(r => setTimeout(r, 1000));
+            }
             
-            status.innerText = "Hesaplanıyor...";
-            const followersMap = new Set(followers.map(u => u.pk));
-            const unfollowers = following.filter(u => !followersMap.has(u.pk));
-            
-            count.innerText = unfollowers.length;
             status.innerText = "Tamamlandı!";
             
             if(unfollowers.length === 0) {
