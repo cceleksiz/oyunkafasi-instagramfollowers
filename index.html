@@ -64,7 +64,7 @@
     style.innerHTML = `
         #ok-overlay-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9, 9, 11, 0.95); z-index: 999999; display: flex; color: #fff; font-family: sans-serif; }
         .ok-sidebar { width: 320px; background: #18181b; padding: 30px 20px; display: flex; flex-direction: column; gap: 20px; border-right: 1px solid #333; }
-        .ok-btn { background: #10b981; color: #fff; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; }
+        .ok-btn { background: #06b6d4; color: #fff; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; }
         .ok-btn:disabled { background: #3f3f46; color: #a1a1aa; cursor: not-allowed; }
         .ok-content { flex: 1; padding: 30px; overflow-y: auto; }
         .ok-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; align-content: start; }
@@ -78,12 +78,12 @@
     panel.id = 'ok-overlay-panel';
     panel.innerHTML = `
         <div class="ok-sidebar">
-            <h2 style="margin:0; color:#10b981;">OYUN KAFASI V3</h2>
-            <p style="font-size:13px; color:#a1a1aa;">Gelişmiş Unfollow modülü devrede.</p>
+            <h2 style="margin:0; color:#06b6d4;">OYUN KAFASI V4</h2>
+            <p style="font-size:13px; color:#a1a1aa;">Gelişmiş XMLHttpRequest Unfollow modülü devrede.</p>
             <button class="ok-btn" id="ok-start">Taramayı Başlat</button>
             <div style="background:#27272a; padding:15px; border-radius:10px; text-align:center;">
                 <p style="margin:0; font-size:12px; color:#a1a1aa;">GERİ TAKİP ETMEYENLER</p>
-                <p id="ok-count" style="margin:10px 0 0 0; font-size:32px; font-weight:bold; color:#10b981;">0</p>
+                <p id="ok-count" style="margin:10px 0 0 0; font-size:32px; font-weight:bold; color:#06b6d4;">0</p>
             </div>
             <p style="margin-top:auto;">Durum: <span id="ok-status" style="color:#4ade80;">Hazır</span></p>
             <button class="ok-btn" style="background:transparent; border:1px solid #ef4444; color:#ef4444;" onclick="document.getElementById('ok-overlay-panel').remove()">Paneli Kapat</button>
@@ -169,31 +169,39 @@
                 results.appendChild(div);
             });
 
-            // GÜNCELLENMİŞ TAKİPTEN ÇIKMA FONKSİYONU
+            // YEPYENİ V4 TAKİPTEN ÇIKMA FONKSİYONU
             document.querySelectorAll('.ok-action').forEach(b => {
                 b.addEventListener('click', async function() {
                     this.disabled = true;
                     this.innerText = '...';
+                    
                     try {
-                        // Yeni Web Unfollow API uç noktası ve Content-Type eklentisi
                         const targetId = this.getAttribute('data-id');
-                        const res = await fetch(`https://www.instagram.com/api/v1/web/friendships/${targetId}/unfollow/`, {
+                        
+                        // Güncellenmiş XHR başlıkları ile POST isteği
+                        const res = await fetch(`https://www.instagram.com/api/v1/friendships/destroy/${targetId}/`, {
                             method: 'POST',
                             headers: { 
                                 'X-IG-App-ID': appId, 
                                 'X-CSRFToken': csrf,
+                                'X-Requested-With': 'XMLHttpRequest',
                                 'Content-Type': 'application/x-www-form-urlencoded'
-                            }
+                            },
+                            // Instagram bazen boş POST isteklerini reddeder, bu yüzden hedef id'yi gövde olarak ekledik
+                            body: `user_id=${targetId}` 
                         });
                         
                         if(res.ok) { 
                             this.innerText = 'Çıkıldı'; 
                             this.style.background = '#3f3f46'; 
-                        } else { 
+                        } else {
+                            // Hata kodunu konsola yazdır, sorunu daha rahat görelim
+                            console.error(`Takipten Çıkma Hatası: ${res.status} ${res.statusText}`);
                             this.innerText = 'Hata'; 
                             this.disabled = false; 
                         }
                     } catch(e) {
+                        console.error('Beklenmeyen bir hata oluştu:', e);
                         this.innerText = 'Hata'; 
                         this.disabled = false;
                     }
