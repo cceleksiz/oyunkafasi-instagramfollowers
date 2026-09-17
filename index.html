@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oyun Kafası | Instagram Hızlı Analiz</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <style>
         :root {
             --bg: #09090b;
@@ -228,5 +229,33 @@
             });
         }
     </script>
+    <script>
+    // 1. Sağ Tıklamayı Engelle
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // 2. F12, Ctrl+Shift+I, Ctrl+U gibi klavye kısayollarını engelle
+    document.onkeydown = function(e) {
+        // F12 Tuşu
+        if(e.keyCode == 123) {
+            return false;
+        }
+        // Ctrl+Shift+I (Windows İncele Kısayolu)
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 73){
+            return false;
+        }
+        // Cmd+Option+I (Mac İncele Kısayolu)
+        if(e.metaKey && e.altKey && e.keyCode == 73){
+            return false;
+        }
+        // Ctrl+Shift+J (Konsol)
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+            return false;
+        }
+        // Ctrl+U (Sayfa Kaynağını Görüntüle)
+        if(e.ctrlKey && e.keyCode == 85) {
+            return false;
+        }
+    }
+</script>
 </body>
 </html>
