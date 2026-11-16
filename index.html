@@ -180,13 +180,13 @@
                         const targetId = this.getAttribute('data-id');
                         
                         // /api/v1/ olmadan ve credentials: 'include' eklenerek gönderilen stabil istek
-                        const res = await fetch(`https://www.instagram.com/web/friendships/${targetId}/unfollow/`, {
+                        const res = await fetch(`https://www.instagram.com/api/v1/friendships/destroy/${targetId}/`, {
                             method: 'POST',
                             headers: { 
                                 'content-type': 'application/x-www-form-urlencoded',
-                                'x-csrftoken': csrf
+                                'x-csrftoken': csrf,
+                                'X-IG-App-ID': appId
                             },
-                            mode: 'cors',
                             credentials: 'include'
                         });
                         
