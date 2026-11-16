@@ -51,7 +51,7 @@
         <div class="step-box">
             <h3>Adım 2: Analizi Başlat</h3>
             <p>Kilidi açtıktan sonra, aşağıdaki asıl tarama kodunu kopyala ve aynı konsol ekranına yapıştırıp Enter'a bas. Oyun Kafası menüsü otomatik olarak açılacaktır.</p>
-            <div class="code-preview">(function() { ... OYUN KAFASI ... })();</div>
+            <div class="code-preview">(function() { ... OYUN KAFASI ANALIZ ... })();</div>
             <button class="btn" id="btn2" onclick="copyMain()">Asıl Kodu Kopyala</button>
         </div>
     </div>
@@ -79,9 +79,9 @@
     panel.id = 'ok-overlay-panel';
     panel.innerHTML = `
         <div class="ok-sidebar">
-            <h2 style="margin:0; color:#8b5cf6;">OYUN KAFASI ANALIZ</h2>
+            <h2 style="margin:0; color:#8b5cf6;">OYUN KAFASI ANALİZ</h2>
             <p style="font-size:13px; color:#a1a1aa;">Oyun Kafası çalışıyor...</p>
-            <button class="ok-btn" id="ok-start">Taramayı Başlat</button>
+            <button class="ok-btn" id="ok-start">Hızlı Taramayı Başlat</button>
             <div style="background:#27272a; padding:15px; border-radius:10px; text-align:center;">
                 <p style="margin:0; font-size:12px; color:#a1a1aa;">GERİ TAKİP ETMEYENLER</p>
                 <p id="ok-count" style="margin:10px 0 0 0; font-size:32px; font-weight:bold; color:#8b5cf6;">0</p>
@@ -93,7 +93,7 @@
     `;
     document.body.appendChild(panel);
 
-    // Instagram engelini aşmak için kapatma işlemi Event Listener ile bağlandı
+    // Kapatma işlemi Instagram'ın CSP kısıtlamasına takılmaması için Event Listener ile yapıldı.
     document.getElementById('ok-close-btn').addEventListener('click', () => {
         const p = document.getElementById('ok-overlay-panel');
         if(p) p.remove();
@@ -119,43 +119,42 @@
 
             if (!userId || !csrf) throw new Error("Oturum bulunamadı. Lütfen giriş yapın.");
 
+            // 1. AŞAMA: Takip Edilenleri Topluca Çek
             let following = [];
             let maxId = '';
             let hasMore = true;
-            
             while (hasMore) {
-                status.innerText = `Takip Ettiklerin Toplanıyor: ${following.length} kişi...`;
+                status.innerText = `Takip Ettiklerin Toplanıyor: ${following.length}...`;
                 const res = await fetch(`https://www.instagram.com/api/v1/friendships/${userId}/following/?count=100${maxId ? '&max_id=' + maxId : ''}`, { headers: { 'X-IG-App-ID': appId, 'X-CSRFToken': csrf } });
                 if (!res.ok) throw new Error('Instagram sınırlandırdı.');
                 const data = await res.json();
                 following = following.concat(data.users);
                 hasMore = !!data.next_max_id;
                 maxId = data.next_max_id;
-                await new Promise(r => setTimeout(r, 800));
+                await new Promise(r => setTimeout(r, 400));
             }
 
-            const unfollowers = [];
-            for (let i = 0; i < following.length; i++) {
-                const user = following[i];
-                status.innerText = `Kontrol Ediliyor: ${i + 1} / ${following.length}`;
-                
-                try {
-                    const res = await fetch(`https://www.instagram.com/api/v1/friendships/show/${user.pk}/`, { 
-                        headers: { 'X-IG-App-ID': appId, 'X-CSRFToken': csrf } 
-                    });
-                    
-                    if (res.ok) {
-                        const friendshipData = await res.json();
-                        if (friendshipData.followed_by === false) {
-                            unfollowers.push(user);
-                            count.innerText = unfollowers.length;
-                        }
-                    }
-                } catch(e) {}
-                
-                await new Promise(r => setTimeout(r, 1000));
+            // 2. AŞAMA: Takipçileri Topluca Çek (Hızlı Yöntem)
+            let followers = [];
+            maxId = '';
+            hasMore = true;
+            while (hasMore) {
+                status.innerText = `Seni Takip Edenler Toplanıyor: ${followers.length}...`;
+                const res = await fetch(`https://www.instagram.com/api/v1/friendships/${userId}/followers/?count=100${maxId ? '&max_id=' + maxId : ''}`, { headers: { 'X-IG-App-ID': appId, 'X-CSRFToken': csrf } });
+                if (!res.ok) throw new Error('Instagram sınırlandırdı.');
+                const data = await res.json();
+                followers = followers.concat(data.users);
+                hasMore = !!data.next_max_id;
+                maxId = data.next_max_id;
+                await new Promise(r => setTimeout(r, 400));
             }
+
+            // 3. AŞAMA: İki Listeyi Saniyeler İçinde Karşılaştır
+            status.innerText = "Sonuçlar Hesaplanıyor...";
+            const followersIds = new Set(followers.map(u => u.pk));
+            const unfollowers = following.filter(u => !followersIds.has(u.pk));
             
+            count.innerText = unfollowers.length;
             status.innerText = "Tamamlandı!";
             
             if(unfollowers.length === 0) {
@@ -176,6 +175,7 @@
                 results.appendChild(div);
             });
 
+            // Takipten Çıkma Fonksiyonu (Adres düzeltildi ve boş JSON çökme hatası iptal edildi)
             document.querySelectorAll('.ok-action').forEach(b => {
                 b.addEventListener('click', async function() {
                     this.disabled = true;
@@ -183,8 +183,6 @@
                     
                     try {
                         const targetId = this.getAttribute('data-id');
-                        
-                        // Güncel Endpoint ve Headers
                         const res = await fetch(`https://www.instagram.com/api/v1/friendships/destroy/${targetId}/`, {
                             method: 'POST',
                             headers: { 
@@ -195,16 +193,9 @@
                             credentials: 'include'
                         });
                         
-                        // Yanıttaki 'status' objesi ile doğrulama
                         if(res.ok) { 
-                            const data = await res.json();
-                            if(data.status === 'ok') {
-                                this.innerText = 'Çıkıldı'; 
-                                this.style.background = '#3f3f46'; 
-                            } else {
-                                this.innerText = 'Hata'; 
-                                this.disabled = false; 
-                            }
+                            this.innerText = 'Çıkıldı'; 
+                            this.style.background = '#3f3f46'; 
                         } else {
                             this.innerText = 'Hata'; 
                             this.disabled = false; 
