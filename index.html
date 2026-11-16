@@ -136,7 +136,7 @@
             maxId = '';
             hasMore = true;
             while (hasMore) {
-                status.innerText = `Seni Takip Edenler Toplanıyor: ${followers.length}...`;
+                status.innerText = `Seni Takip Edenler: ${followers.length}...`;
                 const res = await fetch(`https://www.instagram.com/api/v1/friendships/${userId}/followers/?count=100${maxId ? '&max_id=' + maxId : ''}`, { headers: { 'X-IG-App-ID': appId, 'X-CSRFToken': csrf } });
                 if (!res.ok) throw new Error('Instagram sınırlandırdı.');
                 const data = await res.json();
