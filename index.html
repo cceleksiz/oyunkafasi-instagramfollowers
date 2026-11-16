@@ -87,11 +87,17 @@
                 <p id="ok-count" style="margin:10px 0 0 0; font-size:32px; font-weight:bold; color:#8b5cf6;">0</p>
             </div>
             <p style="margin-top:auto;">Durum: <span id="ok-status" style="color:#4ade80;">Hazır</span></p>
-            <button class="ok-btn" style="background:transparent; border:1px solid #ef4444; color:#ef4444;" onclick="document.getElementById('ok-overlay-panel').remove()">Paneli Kapat</button>
+            <button class="ok-btn" id="ok-close-btn" style="background:transparent; border:1px solid #ef4444; color:#ef4444;">Paneli Kapat</button>
         </div>
         <div class="ok-content"><div id="ok-results" class="ok-grid"></div></div>
     `;
     document.body.appendChild(panel);
+
+    // Instagram engelini aşmak için kapatma işlemi Event Listener ile bağlandı
+    document.getElementById('ok-close-btn').addEventListener('click', () => {
+        const p = document.getElementById('ok-overlay-panel');
+        if(p) p.remove();
+    });
 
     document.getElementById('ok-start').addEventListener('click', async () => {
         const btn = document.getElementById('ok-start');
@@ -170,7 +176,6 @@
                 results.appendChild(div);
             });
 
-            // V5 (DAVID ARROYO REFERANSLI) KESİN ÇÖZÜM UNFOLLOW FONKSİYONU
             document.querySelectorAll('.ok-action').forEach(b => {
                 b.addEventListener('click', async function() {
                     this.disabled = true;
@@ -179,20 +184,27 @@
                     try {
                         const targetId = this.getAttribute('data-id');
                         
-                        // /api/v1/ olmadan ve credentials: 'include' eklenerek gönderilen stabil istek
-                        const res = await fetch(`https://www.instagram.com/api/v1/friendships/destroy/${targetId}/`, {
+                        // Güncel Endpoint ve Headers
+                        const res = await fetch(`https://www.instagram.com/api/v1/web/friendships/${targetId}/unfollow/`, {
                             method: 'POST',
                             headers: { 
-                                'content-type': 'application/x-www-form-urlencoded',
-                                'x-csrftoken': csrf,
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'X-CSRFToken': csrf,
                                 'X-IG-App-ID': appId
                             },
                             credentials: 'include'
                         });
                         
+                        // Yanıttaki 'status' objesi ile doğrulama
                         if(res.ok) { 
-                            this.innerText = 'Çıkıldı'; 
-                            this.style.background = '#3f3f46'; 
+                            const data = await res.json();
+                            if(data.status === 'ok') {
+                                this.innerText = 'Çıkıldı'; 
+                                this.style.background = '#3f3f46'; 
+                            } else {
+                                this.innerText = 'Hata'; 
+                                this.disabled = false; 
+                            }
                         } else {
                             this.innerText = 'Hata'; 
                             this.disabled = false; 
@@ -216,7 +228,6 @@
     </script>
     <script>
         function copyMain() {
-            // Ham kodu doğrudan kopyalar, HTML'in bozması imkansızdır.
             const code = document.getElementById('raw-code').textContent.trim();
             navigator.clipboard.writeText(code).then(() => {
                 const btn = document.getElementById('btn2');
@@ -230,32 +241,15 @@
         }
     </script>
     <script>
-    // 1. Sağ Tıklamayı Engelle
     document.addEventListener('contextmenu', event => event.preventDefault());
 
-    // 2. F12, Ctrl+Shift+I, Ctrl+U gibi klavye kısayollarını engelle
     document.onkeydown = function(e) {
-        // F12 Tuşu
-        if(e.keyCode == 123) {
-            return false;
-        }
-        // Ctrl+Shift+I (Windows İncele Kısayolu)
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 73){
-            return false;
-        }
-        // Cmd+Option+I (Mac İncele Kısayolu)
-        if(e.metaKey && e.altKey && e.keyCode == 73){
-            return false;
-        }
-        // Ctrl+Shift+J (Konsol)
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 74) {
-            return false;
-        }
-        // Ctrl+U (Sayfa Kaynağını Görüntüle)
-        if(e.ctrlKey && e.keyCode == 85) {
-            return false;
-        }
+        if(e.keyCode == 123) { return false; }
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 73) { return false; }
+        if(e.metaKey && e.altKey && e.keyCode == 73) { return false; }
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 74) { return false; }
+        if(e.ctrlKey && e.keyCode == 85) { return false; }
     }
-</script>
+    </script>
 </body>
 </html>
